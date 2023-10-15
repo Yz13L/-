@@ -11,5 +11,10 @@ sky:
     access-key-id: LTAI5t8o8vnubs9kC6UxiuKu
     access-key-secret: QAgaF0eGNFVDHrv2IPccJF0fvinOoQ
     bucket-name: yzy-learn
+  redis:
+    host: localhost
+    port: 6379
+    password: root
+    database: 10
 
 
