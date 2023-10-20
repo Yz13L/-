@@ -8,7 +8,10 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.Setmeal;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.DishStopFailedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -211,6 +214,29 @@ public class DishServiceimpl implements DishService {
         }
 
         return dishVOList;
+    }
+
+    /**
+     * 菜品起售停售
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //被套餐关联的菜品不能被停售---通过菜品id查setmeal_dish表
+        SetmealDish setmealDish = setmealDishMapper.getSetmealDishByDishId(id);
+        if(setmealDish != null){
+            //该菜品被关联，无法被删除
+            throw new DishStopFailedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+
+        Dish dish =Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+
+        dishMapper.update(dish);
+
     }
 
 
